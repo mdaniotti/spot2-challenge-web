@@ -3,14 +3,15 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import CreateUrlPage from "@/pages/CreateUrlPage";
 import UrlListPage from "@/pages/UrlListPage";
 import UrlDetailsPage from "@/pages/UrlDetailsPage";
-import Layout from "./pages/Layout";
+import RedirectPage from "@/pages/RedirectPage";
+import LayoutPage from "@/pages/LayoutPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ErrorBoundary>
-        <Layout />
+        <LayoutPage />
       </ErrorBoundary>
     ),
     children: [
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
         element: <UrlDetailsPage />,
       },
     ],
+  },
+  {
+    path: "/:code",
+    element: <RedirectPage />,
   },
   {
     path: "/*",

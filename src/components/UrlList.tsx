@@ -11,7 +11,7 @@ const UrlList = ({
   onUrlDeleted,
 }: {
   urls: Url[];
-  onUrlDeleted: () => void;
+  onUrlDeleted?: (deletedId: string) => void;
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -22,6 +22,10 @@ const UrlList = ({
     enabled: false,
   });
 
+  const handleRedirect = (shortCode: string) => {
+    window.open(`/${shortCode}`, "_blank");
+  };
+
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this URL?")) {
       return;
@@ -30,8 +34,10 @@ const UrlList = ({
     try {
       setDeletingId(id);
       await execute(undefined, `/urls/${id}`);
+
+      // Notificar al componente padre que se eliminó esta URL específica
       if (onUrlDeleted) {
-        onUrlDeleted();
+        onUrlDeleted(id);
       }
 
       enqueueSnackbar("URL deleted successfully", {
@@ -65,9 +71,9 @@ const UrlList = ({
     <div className="space-y-4">
       {/* Header - Only visible on desktop */}
       <div className="hidden md:flex px-4 items-center space-x-4 font-semibold text-gray-800">
-        <p className="w-[5%]">ID</p>
+        <p className="w-[10%]">ID</p>
         <p className="w-[15%]">Code</p>
-        <p className="w-[70%]">Original URL</p>
+        <p className="w-[65%]">Original URL</p>
         <p className="w-[10%]">Actions</p>
       </div>
 
@@ -82,9 +88,9 @@ const UrlList = ({
         >
           {/* Desktop layout */}
           <div className="hidden md:flex items-center space-x-4">
-            <span className="w-[5%] text-primary">#{url.id}</span>
+            <span className="w-[10%] truncate text-primary">#{url.id}</span>
             <span className="w-[15%] text-gray-600">{url.short_code}</span>
-            <span className="w-[70%] truncate text-gray-600">
+            <span className="w-[65%] truncate text-gray-600">
               {url.original_url}
             </span>
             <div className="flex items-center space-x-2 w-[10%]">
@@ -92,9 +98,14 @@ const UrlList = ({
                 <Eye className="h-5 w-5 text-primary hover:text-yellow-700" />
               </Link>
 
-              <Link to={url.short_url} target="_blank">
-                <ExternalLink className="h-5 w-5 text-primary hover:text-yellow-700" />
-              </Link>
+              <button
+                onClick={() => handleRedirect(url.short_code)}
+                disabled={isExpired(url.expires_at)}
+                className="p-1 text-primary hover:text-yellow-700 disabled:opacity-50 disabled:hover:text-primary"
+                title="Redirect to original URL"
+              >
+                <ExternalLink className="h-5 w-5" />
+              </button>
 
               <button
                 onClick={() => handleDelete(url.id)}
@@ -120,9 +131,14 @@ const UrlList = ({
                   <Eye className="h-5 w-5 text-primary hover:text-yellow-700" />
                 </Link>
 
-                <Link to={url.short_url} target="_blank">
-                  <ExternalLink className="h-5 w-5 text-primary" />
-                </Link>
+                <button
+                  onClick={() => handleRedirect(url.short_code)}
+                  disabled={isExpired(url.expires_at)}
+                  className="p-1 text-primary hover:text-yellow-700 disabled:opacity-50"
+                  title="Redirect to original URL"
+                >
+                  <ExternalLink className="h-5 w-5" />
+                </button>
 
                 <button
                   onClick={() => handleDelete(url.id)}

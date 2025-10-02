@@ -124,7 +124,7 @@ const UrlDetailsPage = () => {
           </div>
 
           {/* Status Badge */}
-          <div className="flex items-center space-x-6">
+          <div className="flex sm:flex-row flex-col sm:items-center sm:space-x-6">
             <div className="flex items-center space-x-2">
               <label className="block text-sm font-medium text-gray-700">
                 ID:
@@ -154,26 +154,30 @@ const UrlDetailsPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Short URL:
               </label>
-              <div className="flex items-center space-x-2">
+              <div className="flex sm:flex-row flex-col sm:items-center sm:space-x-2 space-y-2">
                 <code className="flex-1 px-3 py-2 bg-gray-100 rounded-md text-sm font-mono shadow-md">
                   {url.short_url}
                 </code>
-                <button
-                  onClick={() => handleCopyToClipboard(url.short_url)}
-                  className="p-1 text-primary hover:text-yellow-700 hover:bg-yellow-50 rounded-md"
-                  title="Copy Short URL"
-                >
-                  <CopyIcon className="h-5 w-5" />
-                </button>
-                <a
-                  href={url.short_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1 text-primary hover:text-yellow-700 hover:bg-yellow-50 rounded-md"
-                  title="Open Short URL"
-                >
-                  <ExternalLink className="h-5 w-5" />
-                </a>
+                <div className="flex items-center space-x-1">
+                  <button
+                    onClick={() => handleCopyToClipboard(url.short_url)}
+                    className="p-1 text-primary hover:text-yellow-700 rounded-md"
+                    title="Copy Short URL"
+                  >
+                    <CopyIcon className="h-5 w-5" />
+                  </button>
+                  {!isExpired(url.expires_at) && (
+                    <a
+                      href={url.short_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1 text-primary hover:text-yellow-700 rounded-md"
+                      title="Open Short URL"
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -182,26 +186,30 @@ const UrlDetailsPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Original URL:
               </label>
-              <div className="flex items-center space-x-2">
+              <div className="flex sm:flex-row flex-col sm:items-center sm:space-x-2 space-y-2">
                 <code className="flex-1 px-3 py-2 bg-gray-100 rounded-md text-sm break-all shadow-md">
                   {url.original_url}
                 </code>
-                <button
-                  onClick={() => handleCopyToClipboard(url.original_url)}
-                  className="p-1 text-primary hover:text-yellow-700 hover:bg-yellow-50 rounded-md"
-                  title="Copy Original URL"
-                >
-                  <CopyIcon className="h-5 w-5" />
-                </button>
-                <a
-                  href={url.original_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1 text-primary hover:text-yellow-700 hover:bg-yellow-50 rounded-md"
-                  title="Open Original URL"
-                >
-                  <ExternalLink className="h-5 w-5" />
-                </a>
+                <div className="flex items-center space-x-1">
+                  <button
+                    onClick={() => handleCopyToClipboard(url.original_url)}
+                    className="p-1 text-primary hover:text-yellow-700 rounded-md"
+                    title="Copy Original URL"
+                  >
+                    <CopyIcon className="h-5 w-5" />
+                  </button>
+                  {!isExpired(url.expires_at) && (
+                    <a
+                      href={url.original_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1 text-primary hover:text-yellow-700 rounded-md"
+                      title="Open Original URL"
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -223,7 +231,7 @@ const UrlDetailsPage = () => {
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-700">Clicks</p>
                     <p className="text-md font-bold text-gray-900">
-                      {url.clicks}
+                      {url.clicks || 0}
                     </p>
                   </div>
                 </div>

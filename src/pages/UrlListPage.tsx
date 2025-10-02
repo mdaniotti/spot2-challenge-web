@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlusIcon } from "lucide-react";
 import { useApi } from "@/hooks/useApi";
@@ -11,8 +12,18 @@ const UrlListPage = () => {
     url: "/urls",
   });
 
-  const handleUrlDeleted = () => {
-    refetch();
+  const [localUrls, setLocalUrls] = useState<Url[]>([]);
+
+  useEffect(() => {
+    if (data?.data) {
+      setLocalUrls(data.data);
+    }
+  }, [data?.data]);
+
+  const urls = localUrls.length > 0 ? localUrls : data?.data || [];
+
+  const handleUrlDeleted = (deletedId: string) => {
+    setLocalUrls((prev) => prev.filter((url) => url.id !== deletedId));
   };
 
   return (
@@ -51,7 +62,7 @@ const UrlListPage = () => {
               </button>
             </div>
           ) : (
-            <UrlList urls={data?.data || []} onUrlDeleted={handleUrlDeleted} />
+            <UrlList urls={urls} onUrlDeleted={handleUrlDeleted} />
           )}
         </div>
       </div>

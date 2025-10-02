@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "@/components/Header";
 
-const Layout = () => {
+const LayoutPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -10,4 +10,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default LayoutPage;
