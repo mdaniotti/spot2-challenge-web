@@ -213,9 +213,51 @@ npm run build
 # Contenido estático listo para servir
 ```
 
-### Despliegue en AWS
+### Despliegue Automático en AWS Amplify
 
-???
+La aplicación está configurada para desplegarse automáticamente en AWS Amplify con cada push a la rama principal.
+
+#### Configuración del Pipeline
+
+**1. Archivo de Configuración**
+
+El archivo `amplify.yml` en la raíz del proyecto define el pipeline de CI/CD:
+
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+```
+
+**2. Proceso de Deploy Automático**
+
+Cada vez que hagas push a la rama configurada:
+
+```bash
+git add .
+git commit -m "Nueva funcionalidad"
+git push origin main
+```
+
+**3. URLs de Acceso**
+
+Después del primer deploy exitoso:
+
+- **URL de Producción**: `https://main.d2ahax4vju1fje.amplifyapp.com/`
+- **Custom Domain**: Configurable después del deploy inicial
 
 ## 🔒 Seguridad
 
@@ -223,7 +265,7 @@ npm run build
 
 - **Sanitización** de inputs
 - **Validación** client-side
-- **HTTPS** en producción
+- **HTTPS** en producción (automático en Amplify)
 - **CSP headers** configurados
 - **XSS protection** habilitado
 
@@ -267,28 +309,13 @@ npm run build
 # Asegurar que todas las rutas redirijan a index.html
 ```
 
-## 🔄 CI/CD
+#### 5. Deploy en Amplify falla
 
-### GitHub Actions
-
-```yaml
-name: Frontend CI/CD
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-      - name: Install dependencies
-        run: npm ci
-      - name: Run linter
-        run: npm run lint
-      - name: Build
-        run: npm run build
+```bash
+# Verificar que el amplify.yml sea válido
+# Revisar logs en Amplify Console
+# Verificar variables de entorno en Amplify
+# Asegurar que el baseDirectory en amplify.yml sea 'dist' (no 'build')
 ```
 
 ## 📝 Contribución
@@ -315,3 +342,4 @@ MIT License - Ver archivo `LICENSE` para detalles.
 - **Issues**: GitHub Issues
 - **Documentación**: Este README
 - **API Docs**: http://localhost:8000/api/documentation
+- **Amplify Console**: Para ver estado de deploys y logs
